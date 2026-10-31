@@ -1,0 +1,1538 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b0b0d">
+  <title>FINAL CLASS · Competitive Programming Survival Kit</title>
+  <style>
+    :root {
+      --ink: #f7f5f2;
+      --muted: #b8b3b0;
+      --faint: #777174;
+      --paper: #0b0b0d;
+      --surface: #131316;
+      --surface-2: #19191d;
+      --line: #303035;
+      --red: #ef233c;
+      --red-2: #ff5a67;
+      --red-dark: #8f0e1d;
+      --green: #55d187;
+      --amber: #ffc857;
+      --blue: #70a7ff;
+      --code: #09090b;
+      --max: 1160px;
+      --sidebar: 246px;
+      --radius: 14px;
+      --shadow: 0 18px 50px rgba(0,0,0,.28);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 28px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      text-rendering: optimizeLegibility;
+    }
+    ::selection { background: var(--red); color: #fff; }
+    :focus-visible { outline: 3px solid var(--red-2); outline-offset: 3px; }
+    a { color: inherit; text-decoration-color: var(--red); text-underline-offset: 4px; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .skip {
+      position: fixed;
+      left: 16px;
+      top: -80px;
+      z-index: 100;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: #fff;
+      color: #111;
+      transition: top .2s ease;
+    }
+    .skip:focus { top: 16px; }
+
+    .topline {
+      height: 5px;
+      background: var(--red);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 560px;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      right: -210px;
+      top: -190px;
+      border: 70px solid rgba(239,35,60,.14);
+      border-radius: 50%;
+      box-shadow: 0 0 90px rgba(239,35,60,.12);
+      pointer-events: none;
+    }
+    .hero-inner {
+      width: min(var(--max), calc(100% - 40px));
+      min-height: 555px;
+      margin: auto;
+      display: grid;
+      align-content: center;
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .course-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: fit-content;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 760;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .course-mark::before {
+      content: "";
+      width: 40px;
+      height: 2px;
+      background: var(--red);
+    }
+    h1 {
+      max-width: 970px;
+      margin: 0;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: .95;
+      letter-spacing: -.04em;
+      text-wrap: balance;
+    }
+    h1 span { color: var(--red-2); }
+    .hero-copy {
+      max-width: 720px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--ink);
+      background: var(--surface);
+      font-weight: 720;
+      text-decoration: none;
+      transition: background .18s ease, border-color .18s ease, transform .18s ease;
+    }
+    .btn:hover { border-color: var(--faint); background: var(--surface-2); transform: translateY(-1px); }
+    .btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
+    .btn.primary:hover { background: var(--red-2); border-color: var(--red-2); }
+
+    .mobile-bar {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(11,11,13,.96);
+      backdrop-filter: blur(12px);
+    }
+    .mobile-bar strong { font-size: .88rem; letter-spacing: .05em; }
+    .menu-toggle {
+      min-width: 44px;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    .layout {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+      gap: 72px;
+      align-items: start;
+    }
+    .sidebar {
+      position: sticky;
+      top: 28px;
+      padding: 42px 0;
+      height: fit-content;
+    }
+    .sidebar-title {
+      margin: 0 0 14px;
+      color: var(--faint);
+      font-size: .74rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .sidebar nav { display: grid; }
+    .sidebar a {
+      padding: 8px 10px;
+      border-left: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.35;
+      text-decoration: none;
+      transition: color .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .sidebar a:hover,
+    .sidebar a.active {
+      border-left-color: var(--red);
+      color: #fff;
+      background: linear-gradient(90deg, rgba(239,35,60,.10), transparent);
+    }
+    .progress-track {
+      height: 2px;
+      margin-top: 22px;
+      background: var(--line);
+      overflow: hidden;
+    }
+    .progress-fill { width: 0; height: 100%; background: var(--red); }
+
+    main { min-width: 0; padding-bottom: 100px; }
+    section {
+      padding: 86px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    section:last-child { border-bottom: 0; }
+    h2 {
+      max-width: 760px;
+      margin: 0 0 18px;
+      font-size: clamp(2rem, 4.5vw, 3.6rem);
+      line-height: 1.05;
+      letter-spacing: -.035em;
+      text-wrap: balance;
+    }
+    h3 {
+      margin: 42px 0 12px;
+      font-size: clamp(1.25rem, 2vw, 1.65rem);
+      line-height: 1.2;
+      letter-spacing: -.015em;
+    }
+    h4 { margin: 26px 0 8px; font-size: 1rem; }
+    p, li { max-width: 72ch; }
+    .lede {
+      max-width: 720px;
+      margin: 0 0 34px;
+      color: var(--muted);
+      font-size: 1.12rem;
+    }
+    .red { color: var(--red-2); }
+    .muted { color: var(--muted); }
+    .small { font-size: .88rem; }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .key-idea {
+      position: relative;
+      max-width: 780px;
+      margin: 34px 0;
+      padding: 24px 26px 24px 30px;
+      border: 1px solid var(--red-dark);
+      border-radius: var(--radius);
+      background: rgba(239,35,60,.075);
+    }
+    .key-idea::before {
+      content: "";
+      position: absolute;
+      left: -1px;
+      top: 20px;
+      bottom: 20px;
+      width: 1px;
+      background: var(--red-2);
+    }
+    .key-idea strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--red-2);
+      font-size: .76rem;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .key-idea p { margin: 0; color: #fff; font-size: 1.08rem; }
+
+    .steps {
+      counter-reset: lesson;
+      list-style: none;
+      margin: 36px 0 0;
+      padding: 0;
+    }
+    .steps li {
+      counter-increment: lesson;
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      gap: 18px;
+      max-width: 820px;
+      padding: 25px 0;
+      border-top: 1px solid var(--line);
+    }
+    .steps li:last-child { border-bottom: 1px solid var(--line); }
+    .steps li::before {
+      content: counter(lesson, decimal-leading-zero);
+      color: var(--red-2);
+      font: 800 1.05rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+      padding-top: 5px;
+    }
+    .steps h3 { margin: 0 0 7px; font-size: 1.2rem; }
+    .steps p { margin: 0; color: var(--muted); }
+
+    .constraint-table, .symptom-table, .strategy-table, .schedule-table {
+      width: 100%;
+      margin: 28px 0;
+      border-collapse: collapse;
+      font-size: .94rem;
+    }
+    .constraint-table th, .constraint-table td,
+    .symptom-table th, .symptom-table td,
+    .strategy-table th, .strategy-table td,
+    .schedule-table th, .schedule-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: var(--faint);
+      font-size: .73rem;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    td:first-child { font-variant-numeric: tabular-nums; }
+    .table-wrap { overflow-x: auto; }
+
+    .lab {
+      margin: 46px 0 18px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .lab-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+    .lab-head h3 { margin: 0 0 6px; }
+    .lab-head p { margin: 0; color: var(--muted); font-size: .92rem; }
+    .lab-controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 190px;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+    .field { display: grid; gap: 7px; }
+    .field label { color: var(--muted); font-size: .82rem; font-weight: 700; }
+    .range-line { display: flex; align-items: center; gap: 12px; }
+    input[type="range"] { width: 100%; accent-color: var(--red); }
+    select {
+      min-height: 44px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: var(--code);
+    }
+    .n-readout {
+      min-width: 94px;
+      color: #fff;
+      text-align: right;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .series-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .series-controls label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 34px;
+      color: var(--muted);
+      font-size: .82rem;
+      white-space: nowrap;
+    }
+    .series-controls input { accent-color: var(--red); }
+    .swatch { width: 18px; height: 3px; border-radius: 2px; background: var(--swatch); }
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      min-height: 410px;
+      margin-top: 18px;
+    }
+    #complexityChart {
+      display: block;
+      width: 100%;
+      min-height: 410px;
+      overflow: visible;
+    }
+    .chart-tooltip {
+      position: absolute;
+      display: none;
+      z-index: 4;
+      max-width: 260px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: #08080a;
+      box-shadow: 0 12px 32px rgba(0,0,0,.36);
+      pointer-events: none;
+      font-size: .78rem;
+      line-height: 1.45;
+    }
+    .chart-note { margin: 10px 0 0; color: var(--faint); font-size: .78rem; }
+    .complexity-results {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+    .result {
+      min-width: 0;
+      padding: 15px;
+      background: var(--surface);
+    }
+    .result-name { color: var(--muted); font-size: .76rem; }
+    .result-value {
+      display: block;
+      margin: 3px 0 7px;
+      overflow: hidden;
+      color: #fff;
+      font: 760 .94rem/1.3 ui-monospace, SFMono-Regular, Consolas, monospace;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .status.ok { color: var(--green); }
+    .status.maybe { color: var(--amber); }
+    .status.no { color: var(--red-2); }
+
+    .code-shell {
+      position: relative;
+      margin: 26px 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--code);
+    }
+    .code-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 8px 10px 8px 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--faint);
+      background: #101012;
+      font-size: .76rem;
+      letter-spacing: .05em;
+    }
+    .copy-btn {
+      min-height: 32px;
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: var(--muted);
+      background: var(--surface);
+      font-size: .76rem;
+    }
+    .copy-btn:hover { color: #fff; border-color: var(--faint); }
+    pre {
+      margin: 0;
+      padding: 22px;
+      overflow: auto;
+      color: #ece9e7;
+      background: var(--code);
+      font: 14px/1.65 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      tab-size: 4;
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; }
+    p code, li code, td code {
+      padding: .12em .35em;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      color: #fff;
+      background: var(--surface-2);
+      font-size: .9em;
+    }
+    .tok-kw { color: #ff7b89; }
+    .tok-type { color: #79b8ff; }
+    .tok-num { color: #ffc857; }
+    .tok-com { color: #79747a; }
+
+    .split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 26px;
+      margin: 26px 0;
+    }
+    .plain-panel {
+      padding: 24px;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.025), transparent);
+    }
+    .plain-panel h3 { margin: 0 0 10px; }
+    .plain-panel p, .plain-panel li { color: var(--muted); }
+
+    .debug-flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      margin: 34px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .debug-flow div {
+      min-width: 0;
+      padding: 18px 14px;
+      border-right: 1px solid var(--line);
+    }
+    .debug-flow div:last-child { border-right: 0; }
+    .debug-flow strong { display: block; margin-bottom: 5px; color: var(--red-2); font-size: .82rem; }
+    .debug-flow span { display: block; color: var(--muted); font-size: .83rem; line-height: 1.45; }
+
+    .contest-map {
+      margin: 34px 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .contest-row {
+      display: grid;
+      grid-template-columns: 72px 1fr 1fr 1.2fr;
+      align-items: stretch;
+      border-bottom: 1px solid var(--line);
+    }
+    .contest-row:last-child { border-bottom: 0; }
+    .contest-row > div { padding: 17px; border-right: 1px solid var(--line); }
+    .contest-row > div:last-child { border-right: 0; }
+    .problem-letter {
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--red-dark);
+      font-size: 1.4rem;
+      font-weight: 900;
+    }
+    .cell-label { display: block; color: var(--faint); font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; }
+    .cell-value { display: block; margin-top: 3px; color: var(--muted); font-size: .9rem; }
+
+    .checklist {
+      columns: 2;
+      column-gap: 34px;
+      max-width: 820px;
+      padding: 0;
+      list-style: none;
+    }
+    .checklist li {
+      break-inside: avoid;
+      position: relative;
+      padding: 10px 0 10px 31px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 4px;
+      top: 10px;
+      color: var(--red-2);
+      font-weight: 900;
+    }
+
+    .upsolve-loop {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin: 34px 0;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+    .upsolve-loop div { padding: 22px; background: var(--surface); }
+    .upsolve-loop strong { display: block; margin-bottom: 7px; color: var(--red-2); }
+    .upsolve-loop span { color: var(--muted); font-size: .9rem; }
+
+    .final-quote {
+      margin: 44px 0 0;
+      padding: clamp(28px, 6vw, 58px);
+      border: 1px solid var(--red-dark);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(239,35,60,.14), rgba(239,35,60,.02) 55%),
+        var(--surface);
+    }
+    .final-quote p {
+      max-width: 820px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(1.55rem, 4vw, 3rem);
+      font-weight: 820;
+      line-height: 1.16;
+      letter-spacing: -.03em;
+      text-wrap: balance;
+    }
+    .final-quote em { color: var(--red-2); font-style: normal; }
+
+    .schedule-band {
+      display: grid;
+      grid-template-columns: 9fr 2fr 7fr;
+      min-height: 94px;
+      margin: 34px 0 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .schedule-band > div {
+      display: grid;
+      align-content: center;
+      padding: 17px;
+      border-right: 1px solid var(--line);
+    }
+    .schedule-band > div:last-child { border-right: 0; }
+    .schedule-band .block-one { background: #241014; }
+    .schedule-band .break { background: #151519; }
+    .schedule-band .block-two { background: #1b0e11; }
+    .schedule-band strong { font-size: .88rem; }
+    .schedule-band span { color: var(--muted); font-size: .76rem; }
+
+    footer {
+      padding: 38px 20px 58px;
+      border-top: 1px solid var(--line);
+      color: var(--faint);
+      text-align: center;
+      font-size: .82rem;
+    }
+
+    @media (max-width: 940px) {
+      .mobile-bar { display: flex; }
+      .layout { display: block; width: min(760px, calc(100% - 34px)); }
+      .sidebar {
+        display: none;
+        position: sticky;
+        top: 69px;
+        z-index: 25;
+        margin: 0 -17px;
+        padding: 12px 17px 18px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(11,11,13,.98);
+      }
+      .sidebar.open { display: block; }
+      .sidebar-title, .progress-track { display: none; }
+      .sidebar nav { max-height: 54vh; overflow-y: auto; }
+      .sidebar a { padding: 10px 12px; }
+      section { padding: 70px 0; }
+      .hero { min-height: 500px; }
+      .hero-inner { min-height: 495px; }
+    }
+
+    @media (max-width: 700px) {
+      .hero-inner { width: min(100% - 32px, 620px); }
+      .hero::after { right: -330px; }
+      h1 { font-size: clamp(2.7rem, 14vw, 4.8rem); }
+      .split, .lab-controls { grid-template-columns: 1fr; }
+      .debug-flow { grid-template-columns: 1fr; }
+      .debug-flow div { border-right: 0; border-bottom: 1px solid var(--line); }
+      .debug-flow div:last-child { border-bottom: 0; }
+      .upsolve-loop { grid-template-columns: 1fr 1fr; }
+      .complexity-results { grid-template-columns: 1fr 1fr; }
+      .contest-row {
+        grid-template-columns: 58px 1fr;
+      }
+      .contest-row > div { border-bottom: 1px solid var(--line); }
+      .contest-row > div:nth-child(2n) { border-right: 0; }
+      .contest-row > div:nth-last-child(-n+2) { border-bottom: 0; }
+      .checklist { columns: 1; }
+      .schedule-band { grid-template-columns: 1fr; }
+      .schedule-band > div { min-height: 72px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .schedule-band > div:last-child { border-bottom: 0; }
+      .lab { padding: 20px 16px; margin-inline: -4px; }
+      .lab-head { display: block; }
+    }
+
+    @media (max-width: 460px) {
+      body { font-size: 15px; }
+      .layout { width: min(100% - 28px, 760px); }
+      section { padding: 58px 0; }
+      .steps li { grid-template-columns: 44px 1fr; gap: 10px; }
+      .complexity-results, .upsolve-loop { grid-template-columns: 1fr; }
+      .chart-wrap, #complexityChart { min-height: 340px; }
+      pre { padding: 18px 14px; font-size: 12.5px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+
+    @media print {
+      :root { --ink: #111; --muted: #444; --faint: #666; --paper: #fff; --surface: #fff; --surface-2: #f5f5f5; --line: #ccc; --code: #111; }
+      body { background: #fff; color: #111; font-size: 11pt; }
+      .topline, .mobile-bar, .sidebar, .hero-actions, .copy-btn, .series-controls, .lab-controls, .chart-tooltip { display: none !important; }
+      .hero { min-height: 0; padding: 40px 0; }
+      .hero-inner { min-height: 0; }
+      .layout { display: block; width: 100%; }
+      main { padding: 0 28px; }
+      section { padding: 32px 0; break-inside: avoid-page; }
+      .lab, .code-shell, .final-quote { box-shadow: none; }
+      .lab { break-inside: avoid; }
+      a { text-decoration: none; }
+      footer { color: #555; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <div class="topline"></div>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="course-mark">Última clase · 3 horas</div>
+      <h1>Competitive Programming <span>Survival Kit</span></h1>
+      <p class="hero-copy">Cómo pensar, programar y competir mejor. Una guía práctica para transformar algoritmos conocidos en decisiones más claras, código más sólido y mejores concursos.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#habitos">Empezar la guía</a>
+        <button class="btn" type="button" id="printGuide">Imprimir / guardar PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-bar">
+    <strong>SURVIVAL KIT</strong>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="sideNav">Menú</button>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar" id="sideNav">
+      <p class="sidebar-title">En esta guía</p>
+      <nav aria-label="Navegación de la guía">
+        <a href="#habitos">Hábitos para resolver</a>
+        <a href="#complejidad">Restricciones y complejidad</a>
+        <a href="#programacion">Programación rápida y limpia</a>
+        <a href="#debugging">Debugging inteligente</a>
+        <a href="#estrategia">Contest strategy</a>
+        <a href="#upsolving">Upsolving</a>
+        <a href="#conclusion">Conclusión del año</a>
+        <a href="#horario">Horario de clase</a>
+      </nav>
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+    </aside>
+
+    <main id="contenido">
+      <section id="habitos">
+        <h2>Antes del teclado: ocho hábitos que cambian el resultado</h2>
+        <p class="lede">Resolver un problema no empieza cuando escribes código. Empieza cuando conviertes un enunciado en una idea que puedes explicar, probar y defender.</p>
+
+        <div class="key-idea">
+          <strong>Idea clave</strong>
+          <p>No empieces buscando “qué algoritmo es”. Empieza buscando <b>qué sabes del problema</b>.</p>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div>
+              <h3>Entiende exactamente qué se pide</h3>
+              <p>Identifica la entrada, la salida y qué cambia. Dibuja el caso: un grafo, índices sobre un arreglo, movimientos, estados o intervalos. Muchas veces “no sé resolverlo” significa todavía “no entiendo qué está ocurriendo”.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>Mira restricciones y límites</h3>
+              <p>Las restricciones descartan soluciones antes de programarlas. Si <code>n = 10⁹</code>, ni siquiera puedes recorrer todos los valores; si <code>n = 2·10⁵</code>, una solución cuadrática está fuera. Úsalas como pistas, no como decoración.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>Piensa primero en brute force</h3>
+              <p>La solución ingenua casi nunca será la final, pero revela la lógica exacta: qué decisiones existen, qué resultados cuentan y qué trabajo se repite.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>Calcula su complejidad</h3>
+              <p>No digas solo “es lento”. Cuenta loops, estados y operaciones. Escribe <code>O(n²)</code>, <code>O(2ⁿ)</code> o la cota que corresponda y compárala con el límite.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>Encuentra el costo que debes quitar</h3>
+              <p>Pregunta qué parte es más cara, qué información recalculas y qué propiedad todavía no usas. Luego conecta esa necesidad con herramientas conocidas: ordenar, prefijos, búsqueda binaria, dos punteros, mapas, grafos o programación dinámica.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>Elige una idea y pruébala a mano</h3>
+              <p>Ejecuta tu solución sobre el ejemplo y sobre un caso pequeño propio. Si no puedes explicar cada paso sin código, la idea aún no está lista.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>Inventa casos nuevos</h3>
+              <p>Prueba mínimos, máximos, repetidos, ordenados, invertidos, todo igual, respuesta vacía y casos donde tu intuición pueda fallar. Los buenos casos atacan supuestos.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>Ahora sí: programa</h3>
+              <p>Escribe cuando ya sabes qué representará cada variable y por qué la solución funciona. Programar demasiado pronto mezcla dos problemas: diseñar la idea y corregir el código.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section id="complejidad">
+        <h2>Restricciones y complejidad: aprender a leer las pistas</h2>
+        <p class="lede">La complejidad no busca predecir el tiempo exacto. Sirve para saber cómo crece el trabajo y eliminar ideas que no pueden terminar a tiempo.</p>
+
+        <div class="table-wrap">
+          <table class="constraint-table">
+            <thead>
+              <tr><th>Tamaño aproximado</th><th>Qué podría funcionar</th><th>Lectura rápida</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="mono">n ≤ 20</td><td><code>O(2ⁿ)</code>, backtracking, bitmask</td><td>Puedes explorar subconjuntos.</td></tr>
+              <tr><td class="mono">n ≤ 100</td><td><code>O(n³)</code> en algunos casos</td><td>Triple loop quizá sea aceptable.</td></tr>
+              <tr><td class="mono">n ≤ 10³</td><td><code>O(n²)</code></td><td>Un millón de operaciones es razonable.</td></tr>
+              <tr><td class="mono">n ≤ 10⁵–2·10⁵</td><td><code>O(n log n)</code> u <code>O(n)</code></td><td>Ordenar sí; comparar todos con todos, no.</td></tr>
+              <tr><td class="mono">n ≤ 10⁶</td><td><code>O(n)</code> o casi lineal</td><td>Cuida memoria, constantes y número de casos.</td></tr>
+              <tr><td class="mono">n ≈ 10⁹</td><td><code>O(log n)</code>, fórmula o matemática</td><td>No puedes recorrer el rango.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Estas cotas son intuiciones, no leyes. Importan el lenguaje, las constantes, la cantidad de test cases, la memoria y el tipo de operación. Como regla mental, muchos jueces permiten alrededor de <code>10⁷–10⁸</code> operaciones simples por segundo, pero siempre debes leer el time limit.</p>
+
+        <div class="lab" aria-labelledby="labTitle">
+          <div class="lab-head">
+            <div>
+              <h3 id="labTitle">Laboratorio interactivo de complejidad</h3>
+              <p>Mueve <i>n</i>, cambia el presupuesto y observa cuándo cada crecimiento deja de ser viable.</p>
+            </div>
+          </div>
+
+          <div class="lab-controls">
+            <div class="field">
+              <label for="nRange">Tamaño de entrada <span class="mono">(escala logarítmica)</span></label>
+              <div class="range-line">
+                <input id="nRange" type="range" min="0" max="9" value="5.30103" step="0.001">
+                <output class="n-readout mono" id="nValue" for="nRange">200 000</output>
+              </div>
+            </div>
+            <div class="field">
+              <label for="budgetSelect">Presupuesto aproximado</label>
+              <select id="budgetSelect">
+                <option value="10000000">10⁷ operaciones</option>
+                <option value="100000000" selected>10⁸ operaciones</option>
+                <option value="1000000000">10⁹ operaciones</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="series-controls" id="seriesControls" aria-label="Curvas visibles"></div>
+
+          <div class="chart-wrap">
+            <svg id="complexityChart" role="img" aria-labelledby="chartTitle chartDesc">
+              <title id="chartTitle">Crecimiento de distintos tipos de complejidad</title>
+              <desc id="chartDesc">Gráfico logarítmico de operaciones estimadas frente al tamaño n. La línea horizontal representa el presupuesto seleccionado y la vertical el n actual.</desc>
+            </svg>
+            <div class="chart-tooltip" id="chartTooltip" role="tooltip"></div>
+          </div>
+          <p class="chart-note">Ambos ejes son logarítmicos. El gráfico compara órdenes de crecimiento; no sustituye medir tu implementación real.</p>
+          <div class="complexity-results" id="complexityResults" aria-live="polite"></div>
+        </div>
+
+        <div class="key-idea">
+          <strong>Idea clave</strong>
+          <p>Primero diseña una solución correcta. Después identifica qué trabajo se repite o qué dimensión debes eliminar para alcanzar la complejidad que permiten las restricciones.</p>
+        </div>
+      </section>
+
+      <section id="programacion">
+        <h2>Programación rápida, limpia y ordenada</h2>
+        <p class="lede">Velocidad no significa escribir código críptico. Significa reducir decisiones repetidas, usar nombres previsibles y poder detectar errores bajo presión.</p>
+
+        <h3>Un template corto, conocido y suficiente</h3>
+        <p>Memoriza una base que entiendas completa. No llenes el template con estructuras que no usarás: más código también significa más lugares donde equivocarte.</p>
+
+        <div class="code-shell">
+          <div class="code-bar"><span>template.cpp · C++17</span><button class="copy-btn" type="button">Copiar</button></div>
+          <pre><code>#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+using ll = long long;
+using pii = pair&lt;int, int&gt;;
+using vi = vector&lt;int&gt;;
+
+const int MOD = 1'000'000'007;
+const ll INF = (1LL &lt;&lt; 62);
+
+#define all(x) (x).begin(), (x).end()
+#define rall(x) (x).rbegin(), (x).rend()
+
+template &lt;class T&gt;
+bool chmin(T&amp; a, const T&amp; b) {
+    if (b &lt; a) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+
+template &lt;class T&gt;
+bool chmax(T&amp; a, const T&amp; b) {
+    if (a &lt; b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+
+template &lt;class C&gt;
+int sz(const C&amp; container) {
+    return static_cast&lt;int&gt;(container.size());
+}
+
+void solve() {
+    int n;
+    cin &gt;&gt; n;
+
+    vector&lt;ll&gt; a(n);
+    for (ll&amp; x : a) cin &gt;&gt; x;
+
+    // Diseña la idea antes de completar esta parte.
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int tests = 1;
+    // cin &gt;&gt; tests;
+
+    while (tests--) {
+        solve();
+    }
+    return 0;
+}</code></pre>
+        </div>
+
+        <div class="key-idea">
+          <strong>Fast I/O, sin rituales innecesarios</strong>
+          <p><code>ios::sync_with_stdio(false);</code> y <code>cin.tie(nullptr);</code> son lo importante cuando usas <code>cin/cout</code>. No necesitas <code>cout.tie(nullptr)</code>. Después de desactivar la sincronización, evita mezclar <code>scanf/printf</code> con streams de C++.</p>
+        </div>
+
+        <h3>Aliases y constantes: intención, no decoración</h3>
+        <div class="split">
+          <div class="plain-panel">
+            <h3>Cuándo usar cada tipo</h3>
+            <ul>
+              <li><code>int</code>: índices, tamaños moderados y valores hasta aproximadamente 2·10⁹.</li>
+              <li><code>ll</code>: sumas, productos, distancias y respuestas que pueden superar <code>int</code>.</li>
+              <li><code>pii</code>: pares como <code>{distancia, nodo}</code> o <code>{valor, índice}</code>.</li>
+            </ul>
+          </div>
+          <div class="plain-panel">
+            <h3>Evita overflow antes de que ocurra</h3>
+            <p>El resultado se calcula con el tipo de los operandos. En <code>1LL * a * b</code>, el primer producto ya usa <code>long long</code>. Convertir después puede ser demasiado tarde.</p>
+          </div>
+        </div>
+
+        <div class="code-shell">
+          <div class="code-bar"><span>overflow-y-módulo.cpp</span><button class="copy-btn" type="button">Copiar</button></div>
+          <pre><code>int a = 100'000, b = 100'000;
+
+ll good = 1LL * a * b;       // 10^10: correcto
+ll bad  = a * b;             // overflow antes de asignar
+
+ll product = (x % MOD) * (y % MOD) % MOD;
+ll add = (x + y) % MOD;
+ll sub = (x - y + MOD) % MOD;</code></pre>
+        </div>
+
+        <h3><code>auto</code>, referencias y loops</h3>
+        <p>Usa <code>auto</code> cuando el tipo sea obvio o demasiado largo; evita usarlo cuando esconda una conversión, precisión o copia importante.</p>
+
+        <div class="code-shell">
+          <div class="code-bar"><span>recorridos.cpp</span><button class="copy-btn" type="button">Copiar</button></div>
+          <pre><code>vector&lt;int&gt; a = {4, 1, 7};
+
+for (int x : a) {            // copia: útil si solo lees valores pequeños
+    cout &lt;&lt; x &lt;&lt; ' ';
+}
+
+for (int&amp; x : a) {           // referencia: modifica el vector
+    x *= 2;
+}
+
+for (const int&amp; x : a) {     // sin copia y sin modificación
+    cout &lt;&lt; x &lt;&lt; '\n';
+}
+
+map&lt;string, int&gt; frequency;
+for (const auto&amp; [word, count] : frequency) {
+    cout &lt;&lt; word &lt;&lt; ' ' &lt;&lt; count &lt;&lt; '\n';
+}
+
+for (int i = 0; i &lt; n; ++i) {
+    // Usa índice cuando la posición importa.
+}</code></pre>
+        </div>
+
+        <h3>Orden, búsqueda binaria y operaciones frecuentes</h3>
+        <div class="code-shell">
+          <div class="code-bar"><span>toolbox.cpp</span><button class="copy-btn" type="button">Copiar</button></div>
+          <pre><code>sort(all(a));                         // menor a mayor
+sort(rall(a));                        // mayor a menor
+a.erase(unique(all(a)), a.end());     // quitar repetidos (después de sort)
+
+int first_ge = lower_bound(all(a), x) - a.begin(); // primero &gt;= x
+int first_gt = upper_bound(all(a), x) - a.begin(); // primero &gt; x
+
+int count_lt = lower_bound(all(a), x) - a.begin();
+int count_le = upper_bound(all(a), x) - a.begin();
+int count_x  = upper_bound(all(a), x) - lower_bound(all(a), x);
+
+bool exists = binary_search(all(a), x);
+
+ll sum = accumulate(all(a), 0LL);     // 0LL evita acumular como int
+int minimum = *min_element(all(a));
+int maximum = *max_element(all(a));</code></pre>
+        </div>
+
+        <h3>Nombres que te ayudan a pensar</h3>
+        <p><code>n, m</code> para tamaños; <code>u, v</code> para extremos de una arista; <code>i, j</code> para índices; <code>ans</code> para respuesta; <code>freq</code>, <code>dist</code>, <code>parent</code>, <code>visited</code> para su función real. Un nombre un poco más largo cuesta menos que depurar una variable ambigua.</p>
+
+        <div class="key-idea">
+          <strong>Orden recomendado dentro de <code>solve()</code></strong>
+          <p>Lectura → preprocesamiento → algoritmo → respuesta. Mantén cada etapa junta y evita variables globales salvo que el tamaño, la recursión o el rendimiento realmente lo justifiquen.</p>
+        </div>
+      </section>
+
+      <section id="debugging">
+        <h2>Debugging inteligente: buscar evidencia, no adivinar</h2>
+        <p class="lede">Cuando algo falla, cambiar líneas al azar destruye información. La meta es reducir el caso hasta encontrar la primera diferencia entre lo que esperabas y lo que el programa hace.</p>
+
+        <div class="debug-flow" aria-label="Proceso de debugging en cinco pasos">
+          <div><strong>1 · Reproduce</strong><span>Consigue un caso que falle siempre.</span></div>
+          <div><strong>2 · Reduce</strong><span>Hazlo tan pequeño que puedas simularlo.</span></div>
+          <div><strong>3 · Predice</strong><span>Escribe el estado correcto antes de ejecutar.</span></div>
+          <div><strong>4 · Observa</strong><span>Imprime variables e invariantes con intención.</span></div>
+          <div><strong>5 · Aísla</strong><span>Encuentra la primera línea donde divergen.</span></div>
+        </div>
+
+        <div class="code-shell">
+          <div class="code-bar"><span>debug-local.cpp</span><button class="copy-btn" type="button">Copiar</button></div>
+          <pre><code>// Envía información de diagnóstico a cerr, no a cout.
+cerr &lt;&lt; "i=" &lt;&lt; i
+     &lt;&lt; " value=" &lt;&lt; a[i]
+     &lt;&lt; " answer=" &lt;&lt; answer &lt;&lt; '\n';
+
+// Una invariante convierte una suposición en una alarma.
+assert(0 &lt;= left &amp;&amp; left &lt;= right &amp;&amp; right &lt; n);
+
+// Para comparar soluciones: genera casos pequeños y enfrenta
+// tu solución rápida contra un brute force confiable.</code></pre>
+        </div>
+
+        <div class="table-wrap">
+          <table class="symptom-table">
+            <thead><tr><th>Síntoma</th><th>Primero revisa</th></tr></thead>
+            <tbody>
+              <tr><td>Wrong Answer</td><td>Interpretación, casos borde, desigualdades, orden, reinicio entre tests y overflow.</td></tr>
+              <tr><td>Runtime Error</td><td>Índices, vector vacío, división por cero, recursión profunda y referencias inválidas.</td></tr>
+              <tr><td>Time Limit</td><td>Complejidad real, loops anidados ocultos, copias, uso de <code>map</code> y trabajo repetido.</td></tr>
+              <tr><td>Memory Limit</td><td>Dimensiones, estructuras duplicadas, DP demasiado grande y vectores por nodo.</td></tr>
+              <tr><td>Falla solo en casos grandes</td><td><code>int</code> vs. <code>long long</code>, complejidad, límites máximos y stack.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="key-idea">
+          <strong>Idea clave</strong>
+          <p>Un buen mensaje de debug responde una pregunta concreta. “¿En qué iteración deja de cumplirse esta invariante?” es mucho mejor que imprimir todo.</p>
+        </div>
+      </section>
+
+      <section id="estrategia">
+        <h2>Contest strategy: administrar información, tiempo y confianza</h2>
+        <p class="lede">El concurso no premia el orden del PDF. Premia resolver la mayor cantidad posible con el tiempo disponible. Tu primera tarea es construir un mapa, no enamorarte del problema A.</p>
+
+        <h3>Primera pasada: reconocer el terreno</h3>
+        <p>Lee todos los problemas de forma breve. Para cada uno anota qué pide, restricciones, técnica probable, si tienes una idea y qué te bloquea. Si no aparece una ruta clara en pocos minutos, marca el estado y continúa.</p>
+
+        <div class="contest-map" role="table" aria-label="Ejemplo de mapa de problemas">
+          <div class="contest-row" role="row">
+            <div class="problem-letter" role="cell">A</div>
+            <div role="cell"><span class="cell-label">Qué parece</span><span class="cell-value">Simulación / greedy</span></div>
+            <div role="cell"><span class="cell-label">Estado</span><span class="cell-value">Idea clara</span></div>
+            <div role="cell"><span class="cell-label">Siguiente acción</span><span class="cell-value">Probar dos casos y programar</span></div>
+          </div>
+          <div class="contest-row" role="row">
+            <div class="problem-letter" role="cell">B</div>
+            <div role="cell"><span class="cell-label">Qué parece</span><span class="cell-value">Ordenar + dos punteros</span></div>
+            <div role="cell"><span class="cell-label">Estado</span><span class="cell-value">Falta demostrar</span></div>
+            <div role="cell"><span class="cell-label">Siguiente acción</span><span class="cell-value">Buscar contraejemplo en papel</span></div>
+          </div>
+          <div class="contest-row" role="row">
+            <div class="problem-letter" role="cell">C</div>
+            <div role="cell"><span class="cell-label">Qué parece</span><span class="cell-value">Grafo / conectividad</span></div>
+            <div role="cell"><span class="cell-label">Estado</span><span class="cell-value">Sin idea todavía</span></div>
+            <div role="cell"><span class="cell-label">Siguiente acción</span><span class="cell-value">Volver después de asegurar A</span></div>
+          </div>
+        </div>
+
+        <h3>Segunda pasada: elegir por valor, no por orgullo</h3>
+        <div class="split">
+          <div class="plain-panel">
+            <h3>Ataca primero</h3>
+            <ul>
+              <li>El problema con idea completa y baja incertidumbre.</li>
+              <li>El que puedes validar con casos pequeños.</li>
+              <li>El que desbloquea puntos rápidos o confianza.</li>
+            </ul>
+          </div>
+          <div class="plain-panel">
+            <h3>Cambia de problema cuando</h3>
+            <ul>
+              <li>Repites la misma idea sin obtener información nueva.</li>
+              <li>Tu prueba depende de “parece que funciona”.</li>
+              <li>Llevas demasiado tiempo depurando sin un caso mínimo.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p>En papel, actualiza el mapa: <b>leído</b>, <b>idea</b>, <b>programando</b>, <b>debug</b>, <b>enviado</b>. Anota también el motivo del bloqueo. Así, cuando vuelvas, no comienzas desde cero.</p>
+
+        <h3>Checklist antes de enviar</h3>
+        <ul class="checklist">
+          <li>¿Entendí exactamente la salida?</li>
+          <li>¿La complejidad cabe en todas las pruebas?</li>
+          <li>¿Alguna suma o multiplicación necesita <code>long long</code>?</li>
+          <li>¿Los índices y límites incluyen o excluyen el extremo correcto?</li>
+          <li>¿Reinicio estructuras entre test cases?</li>
+          <li>¿Probé mínimo, máximo, repetidos y casos vacíos?</li>
+          <li>¿El ejemplo coincide paso a paso?</li>
+          <li>¿El formato tiene espacios y saltos correctos?</li>
+          <li>¿Quité prints de debug en <code>cout</code>?</li>
+          <li>¿Elegí el lenguaje y archivo correctos?</li>
+        </ul>
+
+        <div class="key-idea">
+          <strong>Idea clave</strong>
+          <p>Un “Wrong Answer” rápido con una hipótesis clara puede enseñar. Veinte minutos de cambios aleatorios solo gastan el reloj.</p>
+        </div>
+      </section>
+
+      <section id="upsolving">
+        <h2>Upsolving: donde el concurso se convierte en aprendizaje</h2>
+        <p class="lede">Upsolving es volver después del concurso a los problemas que no resolviste —o resolviste mal— hasta entender la idea y poder implementarla sin depender de la solución.</p>
+
+        <div class="upsolve-loop">
+          <div><strong>1 · Reintenta</strong><span>Con tiempo, vuelve a leer restricciones y prueba tu mejor idea.</span></div>
+          <div><strong>2 · Consulta</strong><span>Lee solo la pista necesaria. No copies código del editorial.</span></div>
+          <div><strong>3 · Explica</strong><span>Escribe por qué funciona y qué costo eliminó.</span></div>
+          <div><strong>4 · Reimplementa</strong><span>Cierra la solución y prográmala desde cero; luego envíala.</span></div>
+        </div>
+
+        <p>Clasifica la causa real: <b>no conocía la herramienta</b>, <b>no vi la observación</b>, <b>tuve la idea pero no pude demostrarla</b>, <b>implementé mal</b> o <b>administré mal el tiempo</b>. Cada causa necesita una práctica diferente.</p>
+
+        <div class="key-idea">
+          <strong>Regla práctica</strong>
+          <p>Haz upsolving mientras el contexto siga fresco, idealmente dentro de las siguientes 24–48 horas. Guarda una nota corta: problema, observación clave, error propio y señal que podrías reconocer la próxima vez.</p>
+        </div>
+      </section>
+
+      <section id="conclusion">
+        <h2>Conclusión del año</h2>
+        <p class="lede">Después de algoritmos, estructuras, errores y concursos, queda una sola idea que vale la pena conservar.</p>
+
+        <div class="final-quote">
+          <p>Son <em>herramientas</em>; tú eres quien resuelve. Todo lo que vemos se agrega a lo que tú puedes hacer: <em>no son fórmulas mágicas ni recetas</em>.</p>
+        </div>
+      </section>
+
+      <section id="horario">
+        <h2>Horario de la clase final</h2>
+        <p class="lede">Tres horas: contenido útil primero, una pausa real y un cierre que termina jugando.</p>
+
+        <div class="schedule-band" aria-label="Distribución de las tres horas">
+          <div class="block-one"><strong>1 h 30 · Clase</strong><span>Herramientas y estrategia</span></div>
+          <div class="break"><strong>20 min</strong><span>Receso</span></div>
+          <div class="block-two"><strong>1 h 10 · Cierre</strong><span>Upsolving + juegos</span></div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="schedule-table">
+            <thead><tr><th>Tiempo</th><th>Actividad</th><th>Objetivo</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">0:00–0:25</td><td>Hábitos + restricciones</td><td>Pasar del enunciado a una idea viable.</td></tr>
+              <tr><td class="mono">0:25–0:55</td><td>Programación rápida y ordenada</td><td>Template, tipos, loops y herramientas de STL.</td></tr>
+              <tr><td class="mono">0:55–1:10</td><td>Debugging inteligente</td><td>Reducir casos y encontrar la primera divergencia.</td></tr>
+              <tr><td class="mono">1:10–1:30</td><td>Contest strategy</td><td>Mapa de problemas, pasadas y checklist.</td></tr>
+              <tr><td class="mono">1:30–1:50</td><td>Receso</td><td>Descansar de verdad.</td></tr>
+              <tr><td class="mono">1:50–2:10</td><td>Mini cierre del tema</td><td>Recapitular decisiones que sí cambian un concurso.</td></tr>
+              <tr><td class="mono">2:10–2:30</td><td>Upsolving + conclusión del año</td><td>Convertir errores en nuevas herramientas.</td></tr>
+              <tr><td class="mono">2:30–2:45</td><td>Kahoot</td><td>Repaso rápido, competitivo y ligero.</td></tr>
+              <tr><td class="mono">2:45–3:00</td><td>Gartic</td><td>Cierre relajado de la última clase.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>FINAL CLASS · Competitive Programming Survival Kit</footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const navLinks = Array.from(document.querySelectorAll(".sidebar a"));
+      const sections = Array.from(document.querySelectorAll("main section"));
+      const progressFill = document.getElementById("progressFill");
+      const menuToggle = document.getElementById("menuToggle");
+      const sideNav = document.getElementById("sideNav");
+
+      document.getElementById("printGuide").addEventListener("click", function () {
+        window.print();
+      });
+
+      menuToggle.addEventListener("click", function () {
+        const isOpen = sideNav.classList.toggle("open");
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+        menuToggle.textContent = isOpen ? "Cerrar" : "Menú";
+      });
+
+      navLinks.forEach(function (link) {
+        link.addEventListener("click", function () {
+          sideNav.classList.remove("open");
+          menuToggle.setAttribute("aria-expanded", "false");
+          menuToggle.textContent = "Menú";
+        });
+      });
+
+      const sectionObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          navLinks.forEach(function (link) {
+            link.classList.toggle("active", link.getAttribute("href") === "#" + entry.target.id);
+          });
+        });
+      }, { rootMargin: "-18% 0px -70% 0px", threshold: 0 });
+      sections.forEach(function (section) { sectionObserver.observe(section); });
+
+      function updateProgress() {
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        const value = total > 0 ? Math.min(100, Math.max(0, window.scrollY / total * 100)) : 0;
+        progressFill.style.width = value + "%";
+      }
+      updateProgress();
+      window.addEventListener("scroll", updateProgress, { passive: true });
+
+      document.querySelectorAll(".copy-btn").forEach(function (button) {
+        button.addEventListener("click", async function () {
+          const code = button.closest(".code-shell").querySelector("code").innerText;
+          const original = button.textContent;
+          try {
+            await navigator.clipboard.writeText(code);
+            button.textContent = "Copiado";
+          } catch (error) {
+            button.textContent = "Selecciona el código";
+          }
+          window.setTimeout(function () { button.textContent = original; }, 1600);
+        });
+      });
+
+      const SVG_NS = "http://www.w3.org/2000/svg";
+      const chart = document.getElementById("complexityChart");
+      const chartWrap = chart.parentElement;
+      const tooltip = document.getElementById("chartTooltip");
+      const nRange = document.getElementById("nRange");
+      const nValue = document.getElementById("nValue");
+      const budgetSelect = document.getElementById("budgetSelect");
+      const seriesControls = document.getElementById("seriesControls");
+      const results = document.getElementById("complexityResults");
+
+      const series = [
+        { id: "constant", label: "O(1)", color: "#f7f5f2", enabled: false, logOps: function () { return 0; } },
+        { id: "log", label: "O(log n)", color: "#70a7ff", enabled: true, logOps: function (x) { return Math.log10(Math.max(1, x / Math.log10(2))); } },
+        { id: "sqrt", label: "O(√n)", color: "#a98cff", enabled: false, logOps: function (x) { return x / 2; } },
+        { id: "linear", label: "O(n)", color: "#55d187", enabled: true, logOps: function (x) { return x; } },
+        { id: "nlogn", label: "O(n log n)", color: "#ffc857", enabled: true, logOps: function (x) { return x + Math.log10(Math.max(1, x / Math.log10(2))); } },
+        { id: "square", label: "O(n²)", color: "#ff8a5b", enabled: true, logOps: function (x) { return 2 * x; } },
+        { id: "cube", label: "O(n³)", color: "#ff5a67", enabled: false, logOps: function (x) { return 3 * x; } },
+        { id: "exp", label: "O(2ⁿ)", color: "#ef233c", enabled: true, logOps: function (x) { return Math.pow(10, x) * Math.log10(2); } },
+        { id: "fact", label: "O(n!)", color: "#ff2d95", enabled: false, logOps: function (x) {
+          const n = Math.max(1, Math.round(Math.pow(10, x)));
+          if (n > 170) return 40;
+          let total = 0;
+          for (let i = 2; i <= n; i += 1) total += Math.log10(i);
+          return total;
+        }}
+      ];
+
+      series.forEach(function (item) {
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = item.enabled;
+        checkbox.dataset.series = item.id;
+        checkbox.addEventListener("change", function () {
+          item.enabled = checkbox.checked;
+          drawChart();
+        });
+        const swatch = document.createElement("span");
+        swatch.className = "swatch";
+        swatch.style.setProperty("--swatch", item.color);
+        const text = document.createElement("span");
+        text.textContent = item.label;
+        label.append(checkbox, swatch, text);
+        seriesControls.appendChild(label);
+      });
+
+      function formatNumber(value) {
+        if (!Number.isFinite(value) || value > 9.99e18) return "> 10¹⁹";
+        if (value < 1000000) return Math.round(value).toLocaleString("es-SV");
+        const exponent = Math.floor(Math.log10(value));
+        const mantissa = value / Math.pow(10, exponent);
+        return mantissa.toFixed(mantissa < 10 ? 1 : 0) + " × 10^" + exponent;
+      }
+
+      function svgEl(name, attrs, text) {
+        const node = document.createElementNS(SVG_NS, name);
+        Object.keys(attrs || {}).forEach(function (key) { node.setAttribute(key, attrs[key]); });
+        if (text !== undefined) node.textContent = text;
+        return node;
+      }
+
+      function currentN() {
+        return Math.max(1, Math.round(Math.pow(10, Number(nRange.value))));
+      }
+
+      function updateReadout() {
+        nValue.value = currentN().toLocaleString("es-SV");
+        nValue.textContent = nValue.value;
+      }
+
+      function classify(logValue, logBudget) {
+        if (logValue <= logBudget) return { className: "ok", text: "Viable" };
+        if (logValue <= logBudget + 0.7) return { className: "maybe", text: "Al límite" };
+        return { className: "no", text: "No viable" };
+      }
+
+      function renderResults(logN, logBudget) {
+        results.replaceChildren();
+        series.filter(function (item) { return item.enabled; }).forEach(function (item) {
+          const logValue = item.logOps(logN);
+          const value = logValue > 19 ? Infinity : Math.pow(10, Math.max(0, logValue));
+          const state = classify(logValue, logBudget);
+          const cell = document.createElement("div");
+          cell.className = "result";
+          const name = document.createElement("span");
+          name.className = "result-name";
+          name.textContent = item.label;
+          const number = document.createElement("span");
+          number.className = "result-value";
+          number.textContent = formatNumber(value) + " ops";
+          number.title = number.textContent;
+          const badge = document.createElement("span");
+          badge.className = "status " + state.className;
+          badge.textContent = state.text;
+          cell.append(name, number, badge);
+          results.appendChild(cell);
+        });
+      }
+
+      function drawChart() {
+        updateReadout();
+        chart.replaceChildren();
+        chart.append(
+          svgEl("title", { id: "chartTitle" }, "Crecimiento de distintos tipos de complejidad"),
+          svgEl("desc", { id: "chartDesc" }, "Gráfico logarítmico con una línea de presupuesto y otra para el tamaño n seleccionado.")
+        );
+
+        const width = Math.max(320, Math.round(chartWrap.getBoundingClientRect().width));
+        const height = width < 520 ? 340 : 430;
+        const margin = width < 520
+          ? { top: 22, right: 12, bottom: 52, left: 53 }
+          : { top: 22, right: 24, bottom: 54, left: 64 };
+        const innerW = width - margin.left - margin.right;
+        const innerH = height - margin.top - margin.bottom;
+        const maxX = 9;
+        const maxY = 18;
+        const budget = Number(budgetSelect.value);
+        const logBudget = Math.log10(budget);
+        const selectedLogN = Number(nRange.value);
+
+        chart.setAttribute("viewBox", "0 0 " + width + " " + height);
+        chart.style.minHeight = height + "px";
+
+        const xScale = function (x) { return margin.left + x / maxX * innerW; };
+        const yScale = function (y) { return margin.top + innerH - Math.min(maxY, Math.max(0, y)) / maxY * innerH; };
+
+        const plot = svgEl("g");
+        chart.appendChild(plot);
+
+        const gridColor = "#303035";
+        const textColor = "#aaa5a7";
+
+        for (let y = 0; y <= maxY; y += 2) {
+          const py = yScale(y);
+          plot.appendChild(svgEl("line", { x1: margin.left, y1: py, x2: width - margin.right, y2: py, stroke: gridColor, "stroke-width": 1 }));
+          plot.appendChild(svgEl("text", { x: margin.left - 10, y: py + 4, fill: textColor, "font-size": 11, "text-anchor": "end" }, y === 0 ? "1" : "10^" + y));
+        }
+
+        for (let x = 0; x <= maxX; x += 1) {
+          const px = xScale(x);
+          plot.appendChild(svgEl("line", { x1: px, y1: margin.top, x2: px, y2: height - margin.bottom, stroke: gridColor, "stroke-width": 1 }));
+          const showTick = width >= 520 || x % 2 === 0 || x === maxX;
+          if (showTick) {
+            plot.appendChild(svgEl("text", { x: px, y: height - margin.bottom + 22, fill: textColor, "font-size": 11, "text-anchor": "middle" }, x === 0 ? "1" : "10^" + x));
+          }
+        }
+
+        plot.appendChild(svgEl("rect", {
+          x: margin.left, y: margin.top, width: innerW, height: innerH,
+          fill: "none", stroke: "#4a464b", "stroke-width": 1
+        }));
+
+        const budgetY = yScale(logBudget);
+        plot.appendChild(svgEl("line", {
+          x1: margin.left, y1: budgetY, x2: width - margin.right, y2: budgetY,
+          stroke: "#f7f5f2", "stroke-width": 1.5, "stroke-dasharray": "6 5"
+        }));
+        plot.appendChild(svgEl("text", {
+          x: width - margin.right - 4, y: budgetY - 7, fill: "#f7f5f2", "font-size": 11, "text-anchor": "end"
+        }, "presupuesto 10^" + Math.round(logBudget)));
+
+        series.filter(function (item) { return item.enabled; }).forEach(function (item) {
+          let d = "";
+          const points = 180;
+          for (let index = 0; index <= points; index += 1) {
+            const x = index / points * maxX;
+            const y = item.logOps(x);
+            const px = xScale(x);
+            const py = yScale(y);
+            d += (index === 0 ? "M" : "L") + px.toFixed(2) + " " + py.toFixed(2) + " ";
+            if (y > maxY + 2) break;
+          }
+          plot.appendChild(svgEl("path", {
+            d: d.trim(), fill: "none", stroke: item.color, "stroke-width": 2.4,
+            "stroke-linecap": "round", "stroke-linejoin": "round"
+          }));
+        });
+
+        const selectedX = xScale(selectedLogN);
+        plot.appendChild(svgEl("line", {
+          x1: selectedX, y1: margin.top, x2: selectedX, y2: height - margin.bottom,
+          stroke: "#ef233c", "stroke-width": 2
+        }));
+        plot.appendChild(svgEl("text", {
+          x: Math.min(width - margin.right - 3, selectedX + 7),
+          y: margin.top + 14, fill: "#ff7b89", "font-size": 11
+        }, "n = " + currentN().toLocaleString("es-SV")));
+
+        series.filter(function (item) { return item.enabled; }).forEach(function (item) {
+          const logValue = item.logOps(selectedLogN);
+          if (logValue <= maxY) {
+            plot.appendChild(svgEl("circle", {
+              cx: selectedX, cy: yScale(logValue), r: 4.5,
+              fill: item.color, stroke: "#0b0b0d", "stroke-width": 2
+            }));
+          }
+        });
+
+        plot.appendChild(svgEl("text", {
+          x: margin.left + innerW / 2, y: height - 10, fill: "#c7c2c0",
+          "font-size": 12, "text-anchor": "middle"
+        }, "tamaño de entrada n"));
+        const yTitle = svgEl("text", {
+          x: 14, y: margin.top + innerH / 2, fill: "#c7c2c0",
+          "font-size": 12, "text-anchor": "middle",
+          transform: "rotate(-90 14 " + (margin.top + innerH / 2) + ")"
+        }, "operaciones estimadas");
+        plot.appendChild(yTitle);
+
+        const overlay = svgEl("rect", {
+          x: margin.left, y: margin.top, width: innerW, height: innerH,
+          fill: "transparent", role: "presentation"
+        });
+        overlay.style.cursor = "crosshair";
+        overlay.addEventListener("pointermove", function (event) {
+          const rect = chart.getBoundingClientRect();
+          const localX = (event.clientX - rect.left) * width / rect.width;
+          const x = Math.max(0, Math.min(maxX, (localX - margin.left) / innerW * maxX));
+          const n = Math.max(1, Math.round(Math.pow(10, x)));
+          const lines = series.filter(function (item) { return item.enabled; }).map(function (item) {
+            const logValue = item.logOps(x);
+            const value = logValue > 19 ? Infinity : Math.pow(10, Math.max(0, logValue));
+            return "<span style='color:" + item.color + "'>●</span> " + item.label + ": " + formatNumber(value);
+          });
+          tooltip.innerHTML = "<b>n = " + n.toLocaleString("es-SV") + "</b><br>" + lines.join("<br>");
+          tooltip.style.display = "block";
+          const proposedLeft = event.clientX - rect.left + 14;
+          const proposedTop = event.clientY - rect.top + 14;
+          tooltip.style.left = Math.min(rect.width - 270, Math.max(4, proposedLeft)) + "px";
+          tooltip.style.top = Math.max(4, proposedTop) + "px";
+        });
+        overlay.addEventListener("pointerleave", function () { tooltip.style.display = "none"; });
+        plot.appendChild(overlay);
+
+        renderResults(selectedLogN, logBudget);
+      }
+
+      nRange.addEventListener("input", drawChart);
+      budgetSelect.addEventListener("change", drawChart);
+      const resizeObserver = new ResizeObserver(function () { drawChart(); });
+      resizeObserver.observe(chartWrap);
+      drawChart();
+    }());
+  </script>
+</body>
+</html>
